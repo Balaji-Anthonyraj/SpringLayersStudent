@@ -1,6 +1,8 @@
 package com.example.SpringbootLayers.service;
 
 import com.example.SpringbootLayers.model.Student;
+import com.example.SpringbootLayers.repository.StudentRepo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -9,46 +11,26 @@ import java.util.List;
 @Service
 public class StudentService {
 
-    List<Student> list = new ArrayList<>(List.of(
-      new Student(1,"aathan","ai"),
-      new Student(2,"saif","blockchain"),
-      new Student(29,"balaji","java")
-    ));
+    @Autowired
+    StudentRepo repo;
 
     public List<Student> getStudents() {
-        return list;
+        return repo.findAll();
     }
 
     public Student getStudentById(int id){
-        for (Student student : list) {
-            if (student.getRno() == id) {
-                return student;
-            }
-        }
-        return null;
+       return repo.findById(id).orElse(new Student());
     }
 
     public void addStudent(Student student) {
-        list.add(student);
+        repo.save(student);
     }
 
     public void updateStudent(Student student) {
-        int index = 0;
-        for(int i=0;i<list.size();i++){
-            if(student.getRno()==list.get(i).getRno()){
-                index = i;break;
-            }
-        }
-        list.set(index,student);
+       repo.save(student);
     }
 
     public void deleteStudentById(int id) {
-        int index = 0;
-        for(int i=0;i<list.size();i++){
-            if(id==list.get(i).getRno()){
-                index = i;break;
-            }
-        }
-        list.remove(index);
+       repo.deleteById(id);
     }
 }
